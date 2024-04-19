@@ -58,19 +58,20 @@
     
     GIDSignIn *signIn = GIDSignIn.sharedInstance;
     
-    [signIn signInWithConfiguration:config presentingViewController:self.viewController callback:^(GIDGoogleUser * _Nullable user, NSError * _Nullable error) {
+    [signIn signInWithPresentingViewController:self.viewController callback:^(GIDSignInResult * _Nullable signInResult, NSError * _Nullable error) {
         if (error) {
             NSDictionary *errorDetails = @{@"status": @"error", @"message": error.localizedDescription};
             CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[self toJSONString:errorDetails]];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:self->_callbackId];
         } else {
+            GIDGoogleUser *user = GIDSignIn.sharedInstance.currentUser;
             NSString *email = user.profile.email;
             NSString *userId = user.userID;
             NSURL *imageUrl = [user.profile imageURLWithDimension:120]; // TODO pass in img size as param, and try to sync with Android
             NSDictionary *result = @{
                            @"email"            : email,
                            @"id"               : userId,
-                           @"id_token"         : user.authentication.idToken,
+                           @"id_token"         : user.idToken,
                            @"display_name"     : user.profile.name       ? : [NSNull null],
                            @"given_name"       : user.profile.givenName  ? : [NSNull null],
                            @"family_name"      : user.profile.familyName ? : [NSNull null],
@@ -118,7 +119,7 @@
 }
 
 - (void) disconnect:(CDVInvokedUrlCommand*)command {
-    [GIDSignIn.sharedInstance disconnectWithCallback:^(NSError * _Nullable error) {
+    [GIDSignIn.sharedInstance disconnectWithCompletion:^(NSError * _Nullable error) {
         if(error == nil) {
             NSDictionary *details = @{@"status": @"success", @"message": @"Disconnected"};
             CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[self toJSONString:details]];
