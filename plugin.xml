@@ -38,28 +38,28 @@
         <preference name="REVERSED_CLIENT_ID" />
         <config-file target="*-Info.plist" parent="CFBundleURLTypes">
             <array>
-              <dict>
-                  <key>CFBundleTypeRole</key>
-                  <string>Editor</string>
-                  <key>CFBundleURLName</key>
-                  <string>REVERSED_CLIENT_ID</string>
-                  <key>CFBundleURLSchemes</key>
-                  <array>
-                      <string>$REVERSED_CLIENT_ID</string>
-                  </array>
-              </dict>
+                <dict>
+                    <key>CFBundleURLSchemes</key>
+                    <array>
+                        <string>$REVERSED_CLIENT_ID</string>
+                    </array>
+                </dict>
             </array>
-          </config-file>
+        </config-file>
 
-          <podspec>
+        <config-file target="*-Info.plist" parent="GIDClientID">
+            <string>$REVERSED_CLIENT_ID</string>
+        </config-file>
+
+        <podspec>
             <config>
               <source url="https://github.com/CocoaPods/Specs.git"/>
             </config>
             <pods use-frameworks="true">
-              <pod name="GoogleSignIn" spec="~> 6.2.4" />
+              <pod name="GoogleSignIn" spec="~> 7.1.0" />
               <pod name="GoogleUtilities" spec="~> 7.13.0" />
             </pods>
-          </podspec>
+        </podspec>
 
     </platform>
 </plugin>

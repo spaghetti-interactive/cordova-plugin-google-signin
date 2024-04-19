@@ -43,28 +43,29 @@
 
 - (void) signIn:(CDVInvokedUrlCommand*)command {
     _callbackId = command.callbackId;
-    NSString *reversedClientId = [self getreversedClientId];
+    // NSString *reversedClientId = [self getreversedClientId];
 
-    if (reversedClientId == nil) {
-        NSDictionary *errorDetails = @{@"status": @"error", @"message": @"Could not find REVERSED_CLIENT_ID url scheme in app .plist"};
-        CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[self toJSONString:errorDetails]];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
-        return;
-    }
+    // if (reversedClientId == nil) {
+    //     NSDictionary *errorDetails = @{@"status": @"error", @"message": @"Could not find REVERSED_CLIENT_ID url scheme in app .plist"};
+    //     CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[self toJSONString:errorDetails]];
+    //     [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
+    //     return;
+    // }
 
-    NSString *clientId = [self reverseUrlScheme:reversedClientId];
+    // NSString *clientId = [self reverseUrlScheme:reversedClientId];
 
-    GIDConfiguration *config = [[GIDConfiguration alloc] initWithClientID:clientId];
+    // GIDConfiguration *config = [[GIDConfiguration alloc] initWithClientID:clientId];
     
     GIDSignIn *signIn = GIDSignIn.sharedInstance;
     
-    [signIn signInWithPresentingViewController:self.viewController callback:^(GIDSignInResult * _Nullable signInResult, NSError * _Nullable error) {
+    [signIn signInWithPresentingViewController:self.viewController completion:^(GIDSignInResult * _Nullable signInResult, NSError * _Nullable error) {
         if (error) {
             NSDictionary *errorDetails = @{@"status": @"error", @"message": error.localizedDescription};
             CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[self toJSONString:errorDetails]];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:self->_callbackId];
         } else {
-            GIDGoogleUser *user = GIDSignIn.sharedInstance.currentUser;
+            // GIDGoogleUser *user = GIDSignIn.sharedInstance.currentUser;
+            GIDGoogleUser *user = signInResult.user;
             NSString *email = user.profile.email;
             NSString *userId = user.userID;
             NSURL *imageUrl = [user.profile imageURLWithDimension:120]; // TODO pass in img size as param, and try to sync with Android
